@@ -1,3 +1,5 @@
+import smtplib
+
 from twilio.rest import Client
 
 
@@ -15,3 +17,14 @@ class NotificationManager:
 
         # Check if message went through
         print(message.sid)
+
+    def send_emails(self, emails, message, my_email, my_password):
+        with smtplib.SMTP(host="smtp.gmail.com", port=587) as connection:
+            connection.starttls()
+            connection.login(my_email, my_password)
+            for email in emails:
+                connection.sendmail(
+                    from_addr=my_email,
+                    to_addrs=email,
+                    msg=f"Subject:New Low Price Flight!\n\n{message}".encode('utf-8')
+                )
